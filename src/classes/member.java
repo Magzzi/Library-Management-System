@@ -3,13 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Member extends Person{
-    // Define Member Class
-    // Attributes: memberName, memberID, and a List<Book> for borrowed books.
-    // Methods:
-    // borrowBook(Book book): Adds a book to the member’s borrowed list.
-    // returnBook(Book book): Removes a book from the borrowed list.
-    // Override: Override methods in Person if necessary to fit Member functionalities.
-
     private int memberID;
     private List<Book> borrowedBooks;
 

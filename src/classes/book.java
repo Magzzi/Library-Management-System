@@ -1,13 +1,6 @@
 package classes;
 
 public class Book{
-    // 2.5. Define Book Class
-    // Attributes: title, author, ISBN, publicationDate, availableCopies.
-    // Methods:
-    // borrowBook(): Decreases availableCopies.
-    // returnBook(): Increases availableCopies.
-    // Use abstraction by creating a common interface or abstract class, LibraryItem, to implement common methods like borrowBook() and returnBook().
-
     private String title;
     private Author author;
     private String ISBN;

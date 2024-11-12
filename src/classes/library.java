@@ -3,13 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Library {
-    // Step 3: Define the Library Class
-    // Attributes: List<Book>, List<Member>.
-    // Methods:
-    // addBook(Book book), removeBook(Book book).
-    // addMember(Member member), removeMember(Member member).
-    // Encapsulation: Keep lists private, and provide public methods for adding/removing items.
-
     private List<Book> books;
     private List<Member> members;
 
