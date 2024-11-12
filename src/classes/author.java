@@ -13,6 +13,11 @@ public class Author extends Person{
         this.books = new ArrayList<>();
     }
 
+    //Getter
+    public int getAuthorId(){
+        return authorId;
+    }
+
     //Methods
     public void addBook(Book book){
         if(!books.contains(book)){
