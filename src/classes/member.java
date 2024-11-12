@@ -14,6 +14,10 @@ public class Member extends Person{
     }
 
     //Getter
+    public int getMemberId(){
+        return memberID;
+    }
+
     public List<Book> getBorrowedBooks(){
         return borrowedBooks;
     }
