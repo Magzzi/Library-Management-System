@@ -4,7 +4,6 @@ class Person {
     private String name;
     private int age;
     private String address;
-    private int personId;
 
     //Constructor w/ no parameters
     public Person(){
@@ -31,10 +30,6 @@ class Person {
         return address;
     }
 
-    public int getPersonId(){
-        return personId;
-    }
-
     //Setter
     public void setName(String name) {
         this.name = name;
@@ -46,9 +41,5 @@ class Person {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public void setPersonId(int personId){
-        this.personId = personId;
     }
 }
