@@ -6,10 +6,9 @@ class Person {
     private String address;
     private int personId;
 
-    
     //Constructor w/ no parameters
     public Person(){
-        System.out.println("Java");
+
     }
 
     //Constructor w/ parameters
