@@ -9,19 +9,20 @@ public class LibraryDashboard extends JFrame {
     public LibraryDashboard() {
         // Set up the frame
         setTitle("Library Book Reservation Dashboard");
-        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Start maximized
+        setUndecorated(true); // Remove window decorations for full-screen mode
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Sidebar panel
+        // Sidebar panel with dynamic layout
         JPanel sidebar = new JPanel();
-        sidebar.setBackground(Color.BLACK);
+        sidebar.setBackground(new Color(47, 54, 64)); // Darker blue-gray background for the sidebar
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setPreferredSize(new Dimension(150, getHeight()));
+        sidebar.setPreferredSize(new Dimension(200, getHeight())); // Fixed width, dynamic height
 
         // Logo on the sidebar
-        JLabel logoLabel = new JLabel(new ImageIcon("D:\\CS0070L\\Paul (D;)\\Pictures\\Screenshots\\Screenshot 2024-11-12 221248.png"));
+        JLabel logoLabel = new JLabel(new ImageIcon("logo.png")); // Adjust the path for your image
         logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         sidebar.add(logoLabel);
 
@@ -58,12 +59,12 @@ public class LibraryDashboard extends JFrame {
         sidebar.add(Box.createVerticalGlue());
         sidebar.add(logoutButton);
 
-        // Main panel
+        // Main panel for content
         JPanel mainPanel = new JPanel();
-        mainPanel.setBackground(Color.LIGHT_GRAY);
+        mainPanel.setBackground(new Color(240, 240, 240)); // Light background
         mainPanel.setLayout(new BorderLayout());
 
-        // Top bar panel for user and settings info
+        // Top bar panel for user info and settings
         JPanel topBar = new JPanel();
         topBar.setLayout(new BorderLayout());
         topBar.setPreferredSize(new Dimension(getWidth(), 50));
@@ -99,6 +100,22 @@ public class LibraryDashboard extends JFrame {
         JLabel settingsIcon = new JLabel("⚙️");
         timePanel.add(settingsIcon);
 
+        // Close button (add to the top bar)
+        JButton closeButton = new JButton("Close");
+        closeButton.setBackground(new Color(60, 106, 117)); // Darker teal button background
+        closeButton.setForeground(Color.WHITE); // White button text
+        closeButton.setFont(new Font("Roboto", Font.BOLD, 14));
+        closeButton.setFocusPainted(false);
+        closeButton.setPreferredSize(new Dimension(60, 40)); // Set size
+        closeButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Rounded corners
+        closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0); // Close the application
+            }
+        });
+        timePanel.add(closeButton);
+
         // Add user info and time/date to top bar
         topBar.add(userInfoPanel, BorderLayout.WEST);
         topBar.add(timePanel, BorderLayout.EAST);
@@ -107,14 +124,17 @@ public class LibraryDashboard extends JFrame {
         add(sidebar, BorderLayout.WEST);
         add(topBar, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
+
+        // Adjust size and visibility
+        setVisible(true);
     }
 
     private JButton createSidebarButton(String text, String icon) {
         JButton button = new JButton(icon + " " + text);
-        button.setMaximumSize(new Dimension(150, 50));
+        button.setMaximumSize(new Dimension(200, 50));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setForeground(Color.WHITE);
-        button.setBackground(Color.BLACK);
+        button.setBackground(new Color(60, 106, 117)); // Teal button background
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setFont(new Font("Arial", Font.PLAIN, 14));
