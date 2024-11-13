@@ -7,7 +7,7 @@ public class UsersPage extends JFrame {
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
+        // hello
         // Basic layout and label for demonstration
         JPanel panel = new JPanel();
         panel.setBackground(Color.LIGHT_GRAY);
