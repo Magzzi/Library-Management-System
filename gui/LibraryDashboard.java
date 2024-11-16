@@ -207,8 +207,4 @@ public class LibraryDashboard extends JFrame {
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a\nMMM dd, yyyy");
         label.setText(dateFormat.format(new Date()));
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(LibraryDashboard::new);
-    }
 }
