@@ -1,178 +1,151 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LibraryLogin extends JFrame {
 
+    private static final Color TITLE_COLOR = new Color(60, 106, 117);
+    private static final Color BACKGROUND_COLOR = new Color(47, 54, 64);
+    private static final Color INPUT_BACKGROUND_COLOR = Color.WHITE;
+    private static final Color INPUT_FOREGROUND_COLOR = new Color(50, 50, 50);
+    private static final Color BUTTON_COLOR = new Color(60, 106, 117);
+    private static final Font TITLE_FONT = new Font("Roboto", Font.BOLD, 36);
+    private static final Font BUTTON_FONT = new Font("Roboto", Font.BOLD, 14);
+
     public LibraryLogin() {
-        // Set up the frame
+        setupFrame();
+        JPanel mainPanel = createMainPanel();
+        add(mainPanel);
+        setVisible(true);
+    }
+
+    private void setupFrame() {
         setTitle("Library Book Reservation Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Start maximized
-        setUndecorated(true); // Remove window decorations for full-screen mode
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
         setLocationRelativeTo(null);
+    }
 
-        // Main panel with GridBagLayout for structure
+    private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(new Color(47, 54, 64)); // Darker blue-gray background
+        mainPanel.setBackground(BACKGROUND_COLOR);
 
-        // Title panel (background container for the title text)
-        JPanel titlePanel = new JPanel();
-        titlePanel.setBackground(new Color(60, 106, 117)); // Darker teal background for title
-        titlePanel.setLayout(new BorderLayout());
+        // Add title panel
+        JPanel titlePanel = createTitlePanel();
+        GridBagConstraints gbc = createGbc(0, 0, 1.0, 0.3);
+        mainPanel.add(titlePanel, gbc);
 
-        // Set the height of the title panel to 30% of the screen height
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int titlePanelHeight = (int) (screenSize.height * 0.3); // 30% of the screen height
-        titlePanel.setPreferredSize(new Dimension(screenSize.width, titlePanelHeight));
+        // Add input container
+        JPanel inputContainer = createInputContainer();
+        gbc = createGbc(0, 1, 1.0, 0.6);
+        mainPanel.add(inputContainer, gbc);
 
-        // Title text
-        JLabel titleLabel = new JLabel("Library Management System", JLabel.CENTER); // Center the text
-        titleLabel.setFont(new Font("Roboto", Font.BOLD, 36)); // Font style and size for the title
-        titleLabel.setForeground(new Color(255, 255, 255)); // White text color
+        // Add close button
+        JButton closeButton = createButton("CLOSE", _ -> System.exit(0));
+        gbc = createGbc(0, 2, 1.0, 0.1);
+        gbc.anchor = GridBagConstraints.EAST;
+        mainPanel.add(closeButton, gbc);
 
-        titlePanel.add(titleLabel, BorderLayout.CENTER); // Add the title label to the center of the panel
+        return mainPanel;
+    }
 
-        // Input container panel (background for the fields)
-        JPanel inputContainerPanel = new JPanel();
-        inputContainerPanel.setBackground(new Color(255, 255, 255)); // White background for the container
-        inputContainerPanel.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2)); // Soft gray border
-        inputContainerPanel.setLayout(new GridBagLayout());
+    private JPanel createTitlePanel() {
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setBackground(TITLE_COLOR);
+        titlePanel.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width, 
+                (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.3)));
 
-        // Input panel for username, password, and buttons inside the container
+        JLabel titleLabel = new JLabel("Library Management System", JLabel.CENTER);
+        titleLabel.setFont(TITLE_FONT);
+        titleLabel.setForeground(Color.WHITE);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+
+        return titlePanel;
+    }
+
+    private JPanel createInputContainer() {
+        JPanel inputContainer = new JPanel(new GridBagLayout());
+        inputContainer.setBackground(INPUT_BACKGROUND_COLOR);
+        inputContainer.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(15, 0, 15, 15); // Adjust left padding to 5px and right to 15px
+        gbc.insets = new Insets(15, 0, 15, 15);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Username field
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setForeground(new Color(80, 80, 80)); // Soft dark gray text
-        inputContainerPanel.add(usernameLabel, gbc);
-
-        gbc.gridx = 1;
-        JTextField usernameField = new JTextField(20);
-        usernameField.setToolTipText("Enter Username");
-        usernameField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2)); // Soft border
-        usernameField.setBackground(Color.WHITE); // White input fields for clarity
-        usernameField.setForeground(new Color(50, 50, 50)); // Dark gray text for input
-        inputContainerPanel.add(usernameField, gbc);
-
+        addInputField(inputContainer, gbc, "Username:", new JTextField(20));
+        
         // Password field
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setForeground(new Color(80, 80, 80)); // Soft dark gray text
-        inputContainerPanel.add(passwordLabel, gbc);
-
-        gbc.gridx = 1;
-        JPasswordField passwordField = new JPasswordField(20);
-        passwordField.setToolTipText("Enter Password");
-        passwordField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2)); // Soft border
-        passwordField.setBackground(Color.WHITE); // White input fields for clarity
-        passwordField.setForeground(new Color(50, 50, 50)); // Dark gray text for input
-        inputContainerPanel.add(passwordField, gbc);
+        addInputField(inputContainer, gbc, "Password:", new JPasswordField(20));
 
         // Forgot Password label
+        JLabel forgotPasswordLabel = createLabel("Forgot password?", new Color(100, 100, 100));
         gbc.gridx = 1;
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel forgotPasswordLabel = new JLabel("Forgot password?");
-        forgotPasswordLabel.setForeground(new Color(100, 100, 100)); // Soft gray text
-        forgotPasswordLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        inputContainerPanel.add(forgotPasswordLabel, gbc);
+        inputContainer.add(forgotPasswordLabel, gbc);
 
         // Sign In button
-        gbc.gridx = 1;
+        JButton signInButton = createButton("SIGN IN", _ -> {
+            new LibraryDashboard().setVisible(true);
+            dispose();
+        });
         gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton signInButton = new JButton("SIGN IN");
-        signInButton.setBackground(new Color(60, 106, 117)); // Darker teal button background
-        signInButton.setForeground(new Color(255, 255, 255)); // White button text
-        signInButton.setFont(new Font("Roboto", Font.BOLD, 14));
-        signInButton.setFocusPainted(false);
-        signInButton.setPreferredSize(new Dimension(150, 40)); // Set size
-        signInButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Rounded corners
-        signInButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        inputContainerPanel.add(signInButton, gbc);
+        inputContainer.add(signInButton, gbc);
 
         // Sign Up button
+        JButton signUpButton = createButton("SIGN UP", _ -> 
+            JOptionPane.showMessageDialog(null, "Sign Up button clicked"));
         gbc.gridy = 4;
-        JButton signUpButton = new JButton("SIGN UP");
-        signUpButton.setBackground(new Color(60, 106, 117)); // Darker teal button background
-        signUpButton.setForeground(new Color(255, 255, 255)); // White button text
-        signUpButton.setFont(new Font("Roboto", Font.BOLD, 14));
-        signUpButton.setFocusPainted(false);
-        signUpButton.setPreferredSize(new Dimension(150, 40)); // Set size
-        signUpButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Rounded corners
-        signUpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        signUpButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Sign Up button clicked");
-            }
-        });
-        inputContainerPanel.add(signUpButton, gbc);
+        inputContainer.add(signUpButton, gbc);
 
-        // Close button
-        JButton closeButton = new JButton("CLOSE");
-        closeButton.setBackground(new Color(60, 106, 117)); // Darker teal button background
-        closeButton.setForeground(new Color(255, 255, 255)); // White button text
-        closeButton.setFont(new Font("Roboto", Font.BOLD, 14));
-        closeButton.setFocusPainted(false);
-        closeButton.setPreferredSize(new Dimension(150, 40)); // Set size
-        closeButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Rounded corners
-        closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        closeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0); // Close the application
-            }
-        });
+        return inputContainer;
+    }
 
-        // Add panels to the main panel
-        GridBagConstraints gbc2 = new GridBagConstraints();
-        gbc2.gridx = 0;
-        gbc2.gridy = 0;
-        gbc2.weightx = 1.0;
-        gbc2.weighty = 0.3;
-        gbc2.fill = GridBagConstraints.BOTH;
-        mainPanel.add(titlePanel, gbc2);
+    private void addInputField(JPanel panel, GridBagConstraints gbc , String labelText, JTextField textField) {
+        gbc.gridx = 0;
+        gbc.gridy = panel.getComponentCount() / 2; // Calculate row based on current component count
+        JLabel label = createLabel(labelText, new Color(80, 80, 80));
+        panel.add(label, gbc);
 
-        gbc2.gridy = 1;
-        gbc2.weighty = 0.6;
-        mainPanel.add(inputContainerPanel, gbc2);
+        gbc.gridx = 1;
+        textField.setToolTipText("Enter " + labelText);
+        textField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
+        textField.setBackground(INPUT_BACKGROUND_COLOR);
+        textField.setForeground(INPUT_FOREGROUND_COLOR);
+        panel.add(textField, gbc);
+    }
 
-        gbc2.gridy = 2;
-        gbc2.weighty = 0.1;
-        gbc2.anchor = GridBagConstraints.EAST;
-        mainPanel.add(closeButton, gbc2);
+    private JLabel createLabel(String text, Color color) {
+        JLabel label = new JLabel(text);
+        label.setForeground(color);
+        return label;
+    }
 
-        // Add main panel to frame
-        add(mainPanel);
+    private JButton createButton(String text, java.awt.event.ActionListener action) {
+        JButton button = new JButton(text);
+        button.setBackground(BUTTON_COLOR);
+        button.setForeground(Color.WHITE);
+        button.setFont(BUTTON_FONT);
+        button.setFocusPainted(false);
+        button.setPreferredSize(new Dimension(150, 40));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.addActionListener(action);
+        return button;
+    }
 
-        // Adjust size and visibility
-        setVisible(true);
-
-    // Add action listeners
-    signInButton.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            // Open the dashboard window and close the login window
-            new LibraryDashboard().setVisible(true);
-            dispose(); // Close the login window
-        }
-    });
-    
-    signUpButton.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(null, "Sign Up button clicked");
-        }
-    });
-}
+    private GridBagConstraints createGbc(int gridx, int gridy, double weightx, double weighty) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = gridx;
+        gbc.gridy = gridy;
+        gbc.weightx = weightx;
+        gbc.weighty = weighty;
+        gbc.fill = GridBagConstraints.BOTH;
+        return gbc;
+    }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new LibraryLogin().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new LibraryLogin().setVisible(true));
     }
 }

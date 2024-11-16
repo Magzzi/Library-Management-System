@@ -1,145 +1,205 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LibraryDashboard extends JFrame {
+
+    private static final Color BUTTON_COLOR = new Color(60, 106, 117);
+    private static final Color BUTTON_HOVER_COLOR = new Color(80, 126, 137); // Lighter shade for hover
+    private static final Color BACKGROUND_COLOR = new Color(240, 240, 240);
+    private static final Color CARD_BACKGROUND_COLOR = new Color(255, 255, 255);
+    private static final Color CARD_BORDER_COLOR = new Color(60, 106, 117);
+    private static final Font USER_ROLE_FONT = new Font("Arial", Font.ITALIC, 12);
+    private static final Font BUTTON_FONT = new Font("Arial", Font.PLAIN, 16);
+    private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 24);
+    private static final Font ICON_FONT = new Font("SansSerif", Font.PLAIN, 50);
+    private static final Font VALUE_FONT = new Font("SansSerif", Font.BOLD, 24);
+    private static final Font DESC_FONT = new Font("SansSerif", Font.PLAIN, 16);
+    private static final int SIDEBAR_WIDTH = 200;
+
     public LibraryDashboard() {
-        // Set up the frame
-        setTitle("Library Book Reservation Dashboard");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Start maximized
-        setUndecorated(true); // Remove window decorations for full-screen mode
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        setupFrame();
+        JPanel topBar = createTopBar();
+        JPanel sidebar = createSidebar();
+        JPanel mainPanel = createMainPanel();
 
-        // Sidebar panel with dynamic layout
-        JPanel sidebar = new JPanel();
-        sidebar.setBackground(new Color(47, 54, 64)); // Darker blue-gray background for the sidebar
-        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setPreferredSize(new Dimension(200, getHeight())); // Fixed width, dynamic height
-
-        // Logo on the sidebar
-        JLabel logoLabel = new JLabel(new ImageIcon("logo.png")); // Adjust the path for your image
-        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        sidebar.add(logoLabel);
-
-        // Sidebar buttons
-        JButton dashboardButton = createSidebarButton("Dashboard", "🏠");
-        JButton catalogButton = createSidebarButton("Catalog", "🔍");
-        JButton booksButton = createSidebarButton("Books", "📚");
-        JButton usersButton = createSidebarButton("Users", "👥");
-        JButton logoutButton = createSidebarButton("Logout", "🔓");
-
-        // Add action listeners for page navigation
-        catalogButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new CatalogPage().setVisible(true);
-            }
-        });
-
-        booksButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new BooksPage().setVisible(true);
-            }
-        });
-
-        usersButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new UsersPage().setVisible(true);
-            }
-        });
-
-        sidebar.add(dashboardButton);
-        sidebar.add(catalogButton);
-        sidebar.add(booksButton);
-        sidebar.add(usersButton);
-        sidebar.add(Box.createVerticalGlue());
-        sidebar.add(logoutButton);
-
-        // Main panel for content
-        JPanel mainPanel = new JPanel();
-        mainPanel.setBackground(new Color(240, 240, 240)); // Light background
-        mainPanel.setLayout(new BorderLayout());
-
-        // Top bar panel for user info and settings
-        JPanel topBar = new JPanel();
-        topBar.setLayout(new BorderLayout());
-        topBar.setPreferredSize(new Dimension(getWidth(), 50));
-        topBar.setBackground(Color.WHITE);
-
-        // User info on the top bar
-        JPanel userInfoPanel = new JPanel();
-        userInfoPanel.setBackground(Color.WHITE);
-        userInfoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JLabel userIcon = new JLabel("👤");
-        JLabel userName = new JLabel("PAUL DACALAN");
-        JLabel userRole = new JLabel("Admin");
-        userRole.setFont(new Font("Arial", Font.ITALIC, 12));
-        userInfoPanel.add(userIcon);
-        userInfoPanel.add(userName);
-        userInfoPanel.add(userRole);
-
-        // Time and date on the top bar
-        JPanel timePanel = new JPanel();
-        timePanel.setBackground(Color.WHITE);
-        timePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        JLabel timeLabel = new JLabel();
-        updateTime(timeLabel);
-        Timer timer = new Timer(1000, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                updateTime(timeLabel);
-            }
-        });
-        timer.start();
-        timePanel.add(timeLabel);
-
-        // Settings icon
-        JLabel settingsIcon = new JLabel("⚙️");
-        timePanel.add(settingsIcon);
-
-        // Close button (add to the top bar)
-        JButton closeButton = new JButton("Close");
-        closeButton.setBackground(new Color(60, 106, 117)); // Darker teal button background
-        closeButton.setForeground(Color.WHITE); // White button text
-        closeButton.setFont(new Font("Roboto", Font.BOLD, 14));
-        closeButton.setFocusPainted(false);
-        closeButton.setPreferredSize(new Dimension(60, 40)); // Set size
-        closeButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Rounded corners
-        closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        closeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0); // Close the application
-            }
-        });
-        timePanel.add(closeButton);
-
-        // Add user info and time/date to top bar
-        topBar.add(userInfoPanel, BorderLayout.WEST);
-        topBar.add(timePanel, BorderLayout.EAST);
-
-        // Add top bar and sidebar to main frame
-        add(sidebar, BorderLayout.WEST);
+        // Add panels to the frame
         add(topBar, BorderLayout.NORTH);
+        add(sidebar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
-
-        // Adjust size and visibility
+        
         setVisible(true);
     }
 
-    private JButton createSidebarButton(String text, String icon) {
-        JButton button = new JButton(icon + " " + text);
-        button.setMaximumSize(new Dimension(200, 50));
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+    private void setupFrame() {
+        setTitle("Library Book Reservation Dashboard");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+    }
+
+    private JPanel createTopBar() {
+        JPanel topBar = new JPanel(new BorderLayout());
+        topBar.setPreferredSize(new Dimension(getWidth(), 60));
+        topBar.setBackground(Color.WHITE);
+        topBar.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+        // Title label
+        JLabel titleLabel = new JLabel("Library Dashboard", SwingConstants.CENTER);
+        titleLabel.setFont(TITLE_FONT);
+        topBar.add(titleLabel, BorderLayout.CENTER);
+
+        // User info panel
+        JPanel userInfoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        userInfoPanel.setBackground(Color.WHITE);
+        userInfoPanel.add(new JLabel("👤"));
+        userInfoPanel.add(new JLabel("Mark Eron Diaz"));
+        JLabel userRole = new JLabel("Admin");
+        userRole.setFont(USER_ROLE_FONT);
+        userInfoPanel.add(userRole);
+        topBar.add(userInfoPanel, BorderLayout.WEST);
+
+        // Time panel
+        JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        timePanel.setBackground(Color.WHITE);
+        JLabel timeLabel = new JLabel();
+        updateTime(timeLabel);
+        new Timer(1000, _ -> updateTime(timeLabel)).start();
+        timePanel.add(timeLabel);
+        timePanel.add(new JLabel("⚙️"));
+        timePanel.add(createCloseButton());
+        topBar.add(timePanel, BorderLayout.EAST);
+
+        return topBar;
+    }
+
+    private JButton createCloseButton() {
+        JButton closeButton = new JButton("Close");
+        closeButton.setBackground(BUTTON_COLOR);
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setFont(BUTTON_FONT);
+        closeButton.setFocusPainted(false);
+        closeButton.setPreferredSize(new Dimension(80, 30));
+        closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        closeButton.addActionListener(_ -> System.exit(0));
+        return closeButton;
+    }
+
+    private JPanel createMainPanel() {
+        JPanel mainPanel = new JPanel(new GridLayout(2, 3, 20, 20));
+        mainPanel.setBackground(BACKGROUND_COLOR);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        String[][] stats = {
+            {"0", "Books Listed", "📚", "#28A745"},
+            {"0", "Times Book Issued", "📑", "#007BFF"},
+            {"0", "Times Books Returned", "♻️", "#FFC107"},
+            {"0", "Registered Users", "👤", "#DC3545"},
+            {"0", "Authors Listed", "👨‍💻", "#17A2B8"},
+            {"0", "Listed Categories", "📂", "#6F42C1"}
+        };
+
+        for (String[] stat : stats) {
+            JPanel card = createCard(stat[0], stat[1], stat[2], Color.decode(stat[3]));
+            mainPanel.add(card);
+        }
+
+        return mainPanel; 
+    }
+
+    private JPanel createSidebar() {
+        JPanel sidebar = new JPanel();
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBackground(BUTTON_COLOR);
+        sidebar.setPreferredSize(new Dimension(SIDEBAR_WIDTH, getHeight()));
+        sidebar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Added padding
+
+        String[] buttonLabels = {"Books", "Author", "Member", "Transaction", "Logout"};
+        for (String label : buttonLabels) {
+            JButton button = createMenuButton(label);
+            button.addActionListener(_ -> openPage(label));
+            sidebar.add(button);
+            sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+
+        return sidebar;
+    }
+
+    private JButton createMenuButton(String text) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(180, 60));
         button.setForeground(Color.WHITE);
-        button.setBackground(new Color(60, 106, 117)); // Teal button background
+        button.setBackground(BUTTON_COLOR);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
-        button.setFont(new Font("Arial", Font.PLAIN, 14));
-        button.setHorizontalAlignment(SwingConstants.LEFT);
+        button.setFont(BUTTON_FONT);
+        
+        // Add hover effect
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(BUTTON_HOVER_COLOR);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(BUTTON_COLOR);
+            }
+        });
+        
         return button;
+    }
+
+    private JPanel createCard(String value, String description, String icon, Color bgColor) {
+        JPanel card = new JPanel();
+        card.setBackground(CARD_BACKGROUND_COLOR);
+        card.setLayout(new BorderLayout());
+        card.setBorder(BorderFactory.createLineBorder(CARD_BORDER_COLOR, 2));
+        card.setPreferredSize(new Dimension(200, 100));
+        card.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel iconLabel = new JLabel(icon, SwingConstants.CENTER);
+        iconLabel.setFont(ICON_FONT);
+        iconLabel.setForeground(bgColor);
+
+        JLabel valueLabel = new JLabel(value, SwingConstants.CENTER);
+        valueLabel.setFont(VALUE_FONT);
+
+        JLabel descLabel = new JLabel(description, SwingConstants.CENTER);
+        descLabel.setFont(DESC_FONT);
+
+        card.add(iconLabel, BorderLayout.NORTH);
+        card.add(valueLabel, BorderLayout.CENTER);
+        card.add(descLabel, BorderLayout.SOUTH);
+
+        return card;
+    }
+
+    private void openPage(String page) {
+        switch (page) {
+            case "Books":
+                new BooksPage().setVisible(true);
+                break;
+            case "Author":
+                new AuthorsPage().setVisible(true);
+                break;
+            case "Member":
+                new MembersPage().setVisible(true);
+                break;
+            case "Transaction":
+                new TransactionsPage().setVisible(true);
+                break;
+            case "Logout":
+                System.exit(0);
+                break;
+            default:
+                break;
+        }
     }
 
     private void updateTime(JLabel label) {
@@ -148,10 +208,6 @@ public class LibraryDashboard extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new LibraryDashboard().setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(LibraryDashboard::new);
     }
 }
