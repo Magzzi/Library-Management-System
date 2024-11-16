@@ -145,8 +145,4 @@ public class LibraryLogin extends JFrame {
         gbc.fill = GridBagConstraints.BOTH;
         return gbc;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LibraryLogin().setVisible(true));
-    }
 }
