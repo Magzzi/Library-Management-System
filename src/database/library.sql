@@ -17,3 +17,9 @@ CREATE TABLE members (
     member_id INTEGER PRIMARY KEY AUTOINCREMENT,
     member_name TEXT NOT NULL
 );
+
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL
+);
