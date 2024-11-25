@@ -87,11 +87,11 @@ public class LibraryLogin extends JFrame {
         addInputField(inputContainer, gbc, "Password:", new JPasswordField(20));
 
         //Forgot Password
-        JLabel forgotPasswordLabel = createLabel("Forgot password?", new Color(100, 100, 100));
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        inputContainer.add(forgotPasswordLabel, gbc);
+        // JLabel forgotPasswordLabel = createLabel("Forgot password?", new Color(100, 100, 100));
+        // gbc.gridx = 1;
+        // gbc.gridy = 2;
+        // gbc.anchor = GridBagConstraints.WEST;
+        // inputContainer.add(forgotPasswordLabel, gbc);
 
         //Sign-In Button
         JButton signInButton = createButton("SIGN IN", _ -> {
